@@ -3,6 +3,7 @@
 @model WeatherResponse
 @{
     ViewData["Title"] = "Home Page";
+    Layout = "../Shared/_Layout.cshtml";
 }
 
 <div class="text-center">
@@ -34,7 +35,7 @@
                     </div>
                 </div>
 
-                <div id="data-flexbox" class="row">
+                <div id="data-flexbox" class="d-flex justify-content-center" >
                     <div id="current-weather-container" class="col-md-6">
 
                         <div id="current-weather" class="card">
@@ -54,22 +55,50 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <div id="stat-flexbox" class="text-center">
-                                            <h5 id="max-temp" class="stat-text">@Model?.current?.temp_f</h5>
+                                            <h5 id="low" class="stat-text">@Convert.ToInt32(Model?.forecast?.forecastday[0].day.mintemp_c) C°</h5>
+                                            <p class="subtext">Low</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-6">
+                                        <div id="stat-flexbox" class="text-center">
+                                            <h5 id="max-temp" class="stat-text">@Convert.ToInt32(Model?.forecast?.forecastday[0].day.maxtemp_c) C°</h5>
                                             <p class="subtext">High</p>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div id="stat-flexbox" class="text-center">
-                                            <h5 id="wind" class="stat-text">@Model?.current?.wind_kph</h5>
-                                            <p class="subtext">Wind</p>
-                                        </div>
-                                    </div>
-                                    <!-- Add similar blocks for other statistics -->
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div>
+                    <h3>5-Day Forecast</h3>
+                    <section id="forecast-cards-container" class="container mt-4 justify-content-center">
+                        <div class="row">
+                        @foreach (var forecastday in Model?.forecast?.forecastday)
+                        {
+                           
+                            
+                            <div class="col m-3" >
+                                <div class="card-header p-3">
+                                    <h5>@forecastday?.date</h5>
+                                    <p>Condition: @forecastday?.day?.condition?.text</p>
+                                </div>
+                                <div class="card-body">
+                                    <img src=@forecastday?.day?.condition?.icon />
+                                    
+                                    <p>Low: @Convert.ToInt32(forecastday?.day?.mintemp_c) °C</p>
+                                    <p>High: @Convert.ToInt32(forecastday?.day?.maxtemp_c)°C</p>
+                                </div>
+                            </div>
+                           
+                        }
+                        </div>
+                    </section>
+                </div>
+               
             </div>
 
         }
