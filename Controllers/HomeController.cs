@@ -37,7 +37,8 @@ namespace WeatherAppRemake.Controllers
         public async Task<IActionResult> Index(string city)
         {
             city = Request.Form["city"];
-            var weatherData = await _weatherService.GetWeatherAsync(city);
+            LocationResponse cityName = await _weatherService.GetCityCoords(city);
+            WeatherResponse weatherData = await _weatherService.GetWeatherAsync(cityName);
 
             return View(weatherData);
         }

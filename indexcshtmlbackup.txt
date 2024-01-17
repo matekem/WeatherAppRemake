@@ -1,0 +1,107 @@
+@using WeatherAppRemake.Services;
+@using WeatherAppRemake.Models;
+@model WeatherResponse
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+    <form method="post" asp-action="Index" asp-controller="Home">
+
+         <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" class="form-control" id="city" placeholder="Enter city" name="City" required>
+         </div>
+        <br />
+         <button type="submit" class="btn btn-primary">Submit</button>
+
+
+
+   </form>
+
+    @{
+        if( Model != null)
+        {
+            <div id="data-container" class="container mt-4">
+                <div id="data-header" class="row mb-3">
+                    <div class="col-12">
+                        <h2 class="text-center">
+                            <span id="location">@Model?.location?.name, @Model?.location?.country</span>
+                        </h2>
+                        <p class="text-center">
+                            <span id="date">@Model?.location?.localtime</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div id="data-flexbox" class="d-flex justify-content-center" >
+                    <div id="current-weather-container" class="col-md-6">
+
+                        <div id="current-weather" class="card">
+                            <div class="card-body">
+                                <div id="c-w-img-container" class="text-center">
+                                    <img src="@Model?.current?.condition?.icon" id="current-weather-image" class="img-fluid" />
+                                </div>
+                                <div class="current-flexbox text-center">
+                                    <h3 id="current-temp">@Model?.current?.temp_c</h3>
+                                    <p id="current-desc">@Model?.current?.condition?.text</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="current-stats" class="card mt-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div id="stat-flexbox" class="text-center">
+                                            <h5 id="low" class="stat-text">@Convert.ToInt32(Model?.forecast?.forecastday[0].day.mintemp_c) C°</h5>
+                                            <p class="subtext">Low</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-6">
+                                        <div id="stat-flexbox" class="text-center">
+                                            <h5 id="max-temp" class="stat-text">@Convert.ToInt32(Model?.forecast?.forecastday[0].day.maxtemp_c) C°</h5>
+                                            <p class="subtext">High</p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <section id="forecast-cards-container" class="container mt-4 justify-content-center">
+                        <div class="row">
+                        @foreach (var forecastday in Model?.forecast?.forecastday)
+                        {
+                           
+                            
+                            <div class="col" >
+                                <div class="card-header p-3">
+                                    <h5>@forecastday?.date</h5>
+                                    <p>Condition: @forecastday?.day?.condition?.text</p>
+                                </div>
+                                <div class="card-body">
+                                    <img src=@forecastday?.day?.condition?.icon />
+                                    
+                                    <p>Low: @Convert.ToInt32(forecastday?.day?.mintemp_c) °C</p>
+                                    <p>High: @Convert.ToInt32(forecastday?.day?.maxtemp_c)°C</p>
+                                </div>
+                            </div>
+                           
+                        }
+                        </div>
+                    </section>
+                </div>
+               
+            </div>
+
+        }
+    }
+    
+
+
